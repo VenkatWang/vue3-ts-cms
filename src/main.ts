@@ -5,6 +5,8 @@ import store from './store'
 
 import { registerGlobal } from './global'
 
+import './service/axios-demo'
+
 const app = createApp(App)
 
 app.use(registerGlobal)

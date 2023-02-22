@@ -17,4 +17,8 @@ export default defineComponent({
 .aaa {
   color: red;
 }
+
+.bbb {
+  color: black;
+}
 </style>

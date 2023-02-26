@@ -34,12 +34,18 @@ class Request {
     )
     this.instance.interceptors.response.use(
       (response) => {
-        console.log('响应拦截')
-
+        const data = response.data
+        if (!data.success) {
+          alert('请求失败')
+        }
         return response.data
       },
       (error) => {
-        return error
+        if (error.response.status !== 200) {
+          alert(error.code)
+        }
+
+        return Promise.reject(error)
       }
     )
   }

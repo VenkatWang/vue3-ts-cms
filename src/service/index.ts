@@ -6,11 +6,14 @@ const request = new Request({
   interceptor: {
     requestInterceptor: (config) => {
       console.log('实例：拦截请求成功')
-
+      const token = ''
+      if (token) {
+        config.headers.token = `Bear ${token}`
+      }
       return config
     },
     requestInterceptorCatch: (error) => {
-      return error
+      return Promise.reject(error)
     },
     responseInterceptor: (response) => {
       console.log('实例：拦截返回成功')
@@ -18,7 +21,7 @@ const request = new Request({
       return response
     },
     responseInterceptorCatch(error) {
-      return error
+      return Promise.reject(error)
     }
   }
 })

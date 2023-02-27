@@ -18,7 +18,7 @@
     "types": [
       "webpack-env"
     ],
-    //# 路径解析 类似于webpack alias
+    //# 路径解析 类似于webpack alias(只是用于在项目中使用的时候不报错)
     "paths": {
       "@/*": [
         "src/*"

@@ -2,15 +2,25 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 
+import { ElLoading } from 'element-plus'
+import { LoadingInstance } from 'element-plus/es/components/loading/src/loading'
+
 import { RequestConfig, RequestInterceptors } from './type'
 
+const DEFAULT_LOADING = true
 class Request {
   instance: AxiosInstance
   interceptor?: RequestInterceptors
+
+  loading?: LoadingInstance
+  showLoading?: boolean
+
   constructor(config: RequestConfig) {
     this.instance = axios.create(config)
 
     this.interceptor = config?.interceptor
+
+    this.showLoading = DEFAULT_LOADING
 
     this.instance.interceptors.request.use(
       this.interceptor?.requestInterceptor,
@@ -25,6 +35,11 @@ class Request {
     this.instance.interceptors.request.use(
       (config) => {
         console.log('请求拦截')
+        if (this.showLoading) {
+          this.loading = ElLoading.service({
+            text: '请稍后...'
+          })
+        }
 
         return config
       },
@@ -35,12 +50,14 @@ class Request {
     this.instance.interceptors.response.use(
       (response) => {
         const data = response.data
+        this.loading?.close()
         if (!data.success) {
           alert('请求失败')
         }
         return response.data
       },
       (error) => {
+        this.loading?.close()
         if (error.response.status !== 200) {
           alert(error.code)
         }
@@ -49,17 +66,41 @@ class Request {
       }
     )
   }
-  async request(config: RequestConfig) {
-    if (config.interceptor?.requestInterceptor) {
-      config = config.interceptor?.requestInterceptor(config as any)
+  request<T>(payload: RequestConfig): Promise<T> {
+    if (payload.interceptor?.requestInterceptor) {
+      payload = payload.interceptor?.requestInterceptor(payload as any)
     }
-    // return this.instance.request(config)
-    if (config.interceptor?.responseInterceptor) {
-      let response = await this.instance.request(config)
-      response = config.interceptor?.responseInterceptor(response)
-      return response
+
+    if (payload.showLoading === false) {
+      this.showLoading = payload.showLoading
     }
-    return this.instance.request(config)
+    return new Promise((resolve, reject) => {
+      this.instance
+        .request<any, T>(payload)
+        .then((result) => {
+          this.showLoading = DEFAULT_LOADING
+          if (payload.interceptor?.responseInterceptor) {
+            result = payload.interceptor.responseInterceptor(result)
+          }
+          resolve(result)
+        })
+        .catch((err) => {
+          this.showLoading = DEFAULT_LOADING
+          reject(err)
+        })
+    })
+  }
+  get<T>(payload: RequestConfig) {
+    return this.request<T>({ ...payload, method: 'GET' })
+  }
+  post<T>(payload: RequestConfig) {
+    return this.request<T>({ ...payload, method: 'POST' })
+  }
+  put<T>(payload: RequestConfig) {
+    return this.request<T>({ ...payload, method: 'PUT' })
+  }
+  delete<T>(payload: RequestConfig) {
+    return this.request<T>({ ...payload, method: 'DELETE' })
   }
 }
 

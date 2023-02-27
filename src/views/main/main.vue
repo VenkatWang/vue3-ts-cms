@@ -8,11 +8,17 @@ import { defineComponent } from 'vue'
 
 import { request } from '@/service/index'
 
+interface DataType {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any
+  success: boolean
+  returnCode: string
+}
+
 export default defineComponent({
   setup() {
     request
-      .request({
-        method: 'get',
+      .get<DataType>({
         url: '/home/multidata',
         interceptor: {
           requestInterceptor: (config) => {

@@ -66,7 +66,7 @@ class Request {
       }
     )
   }
-  request<T>(payload: RequestConfig): Promise<T> {
+  request<T>(payload: RequestConfig<T>): Promise<T> {
     if (payload.interceptor?.requestInterceptor) {
       payload = payload.interceptor?.requestInterceptor(payload as any)
     }
@@ -79,6 +79,7 @@ class Request {
         .request<any, T>(payload)
         .then((result) => {
           this.showLoading = DEFAULT_LOADING
+          console.log(result)
           if (payload.interceptor?.responseInterceptor) {
             result = payload.interceptor.responseInterceptor(result)
           }
@@ -90,16 +91,16 @@ class Request {
         })
     })
   }
-  get<T>(payload: RequestConfig) {
+  get<T>(payload: RequestConfig<T>) {
     return this.request<T>({ ...payload, method: 'GET' })
   }
-  post<T>(payload: RequestConfig) {
+  post<T>(payload: RequestConfig<T>) {
     return this.request<T>({ ...payload, method: 'POST' })
   }
-  put<T>(payload: RequestConfig) {
+  put<T>(payload: RequestConfig<T>) {
     return this.request<T>({ ...payload, method: 'PUT' })
   }
-  delete<T>(payload: RequestConfig) {
+  delete<T>(payload: RequestConfig<T>) {
     return this.request<T>({ ...payload, method: 'DELETE' })
   }
 }

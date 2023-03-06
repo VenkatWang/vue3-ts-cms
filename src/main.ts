@@ -5,6 +5,9 @@ import store from './store'
 
 import { registerGlobal } from './global'
 
+import 'normalize.css'
+import '@/assets/css/index.css'
+
 // import './service/axios-demo'
 
 const app = createApp(App)

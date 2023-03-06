@@ -1,11 +1,12 @@
 <template>
-  <center>
-    <nav>
-      <router-link to="/login">login</router-link> |
-      <router-link to="/main">main</router-link>
-    </nav>
+  <div class="app">
     <router-view />
-  </center>
+  </div>
 </template>
 
-<style lang="less"></style>
+<style lang="less" scoped>
+.app {
+  width: 100%;
+  height: 100%;
+}
+</style>

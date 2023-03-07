@@ -1,8 +1,8 @@
 <template>
   <div class="login-panel">
     <h1 class="title">后台管理系统</h1>
-    <el-tabs type="border-card" stretch>
-      <el-tab-pane label="User">
+    <el-tabs type="border-card" stretch v-model="accountTab">
+      <el-tab-pane name="user">
         <template #label>
           <span class="custom-tabs-label">
             <el-icon>
@@ -11,9 +11,12 @@
             <span>账号登录</span>
           </span>
         </template>
-        <div>真好笑</div>
+        <login-account
+          ref="loginAccountRef"
+          :account-tab="accountTab"
+        ></login-account>
       </el-tab-pane>
-      <el-tab-pane label="User">
+      <el-tab-pane name="phone">
         <template #label>
           <span class="custom-tabs-label">
             <el-icon>
@@ -21,32 +24,66 @@
                 <Cellphone />
               </el-icon>
             </el-icon>
-            <span>账号登录</span>
+            <span>手机号登录</span>
           </span>
         </template>
-        <div>哦</div>
+        <login-phone
+          ref="loginPhoneRef"
+          :account-tab="accountTab"
+        ></login-phone>
       </el-tab-pane>
     </el-tabs>
+    <el-button type="primary" class="submit-btn" @click="submit"
+      >登录</el-button
+    >
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
+
+import loginAccount from './login-account.vue'
+import loginPhone from './login-phone.vue'
 
 export default defineComponent({
+  components: {
+    loginAccount,
+    loginPhone
+  },
   setup() {
-    return {}
+    const accountTab = ref('user')
+    const loginAccountRef = ref<InstanceType<typeof loginAccount>>()
+    const loginPhoneRef = ref<InstanceType<typeof loginPhone>>()
+    const submit = () => {
+      if (accountTab.value === 'user') {
+        loginAccountRef.value?.submit()
+      }
+      if (accountTab.value === 'phone') {
+        loginPhoneRef.value?.submit()
+      }
+    }
+    return {
+      accountTab,
+      loginAccountRef,
+      loginPhoneRef,
+      submit
+    }
   }
 })
 </script>
 
 <style scoped lang="less">
 .login-panel {
-  width: 320px;
+  width: 350px;
   margin-bottom: 200px;
 
   .title {
     text-align: center;
+  }
+
+  .submit-btn {
+    width: 100%;
+    margin-top: 8px;
   }
 }
 </style>
@@ -56,6 +93,7 @@ export default defineComponent({
     .el-icon {
       vertical-align: middle;
     }
+
     span {
       vertical-align: middle;
       margin-left: 4px;

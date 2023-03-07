@@ -19,7 +19,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .login {
   width: 100%;
   height: 100%;

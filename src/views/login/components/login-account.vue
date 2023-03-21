@@ -10,7 +10,11 @@
       <el-input v-model="accountForm.username"></el-input>
     </el-form-item>
     <el-form-item label="密码" prop="password">
-      <el-input v-model="accountForm.password"></el-input>
+      <el-input
+        type="password"
+        show-password
+        v-model="accountForm.password"
+      ></el-input>
     </el-form-item>
     <div class="bottom">
       <div>
@@ -26,6 +30,7 @@
 <script lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
 import { defineComponent, reactive, ref } from 'vue'
+import localCache from '@/utils/cache'
 
 const accountRules = reactive<FormRules>({
   username: [
@@ -60,16 +65,24 @@ export default defineComponent({
   setup() {
     const accountRef = ref<FormInstance>()
     const accountForm = reactive({
-      username: '',
-      password: ''
+      username: localCache.getCache('username') ?? '',
+      password: localCache.getCache('password') ?? ''
     })
+    // 是否记住密码
     const isRemberPassword = ref<boolean>(true)
 
     const submit = () => {
       if (!accountRef.value) return
       accountRef.value.validate((valid, fields) => {
         if (valid) {
-          console.log('login account submit', accountForm)
+          if (isRemberPassword.value) {
+            localCache.setCache('username', accountForm.username)
+            localCache.setCache('password', accountForm.password)
+          } else {
+            localCache.deleteCache('username')
+            localCache.deleteCache('password')
+          }
+          // 开始进行登录验证 47分钟
         } else {
           console.log('login account submit', fields)
         }

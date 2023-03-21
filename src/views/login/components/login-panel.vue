@@ -52,8 +52,11 @@ export default defineComponent({
   },
   setup() {
     const accountTab = ref('user')
-    const loginAccountRef = ref<InstanceType<typeof loginAccount>>()
-    const loginPhoneRef = ref<InstanceType<typeof loginPhone>>()
+    type loginAccountType = InstanceType<typeof loginAccount>
+    const loginAccountRef = ref<loginAccountType>()
+
+    type loginPhoneType = InstanceType<typeof loginPhone>
+    const loginPhoneRef = ref<loginPhoneType>()
     const submit = () => {
       if (accountTab.value === 'user') {
         loginAccountRef.value?.submit()

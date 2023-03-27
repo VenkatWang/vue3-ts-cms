@@ -51,7 +51,13 @@ export default defineComponent({
     loginPhone
   },
   setup() {
-    const accountTab = ref('user')
+    // enum Tabs {
+    //   USER = 'user',
+    //   PHONE = 'phone'
+    // }
+    // console.log(Tabs)
+    type Tabs = 'user' | 'phone'
+    const accountTab = ref<Tabs>('user')
     type loginAccountType = InstanceType<typeof loginAccount>
     const loginAccountRef = ref<loginAccountType>()
 
@@ -65,6 +71,7 @@ export default defineComponent({
         loginPhoneRef.value?.submit()
       }
     }
+    // 01:15:46
     return {
       accountTab,
       loginAccountRef,

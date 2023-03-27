@@ -6,7 +6,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import { request } from '@/service/index'
+import { request } from '@/service'
 
 import { RequestConfig } from '@/service/request/type'
 

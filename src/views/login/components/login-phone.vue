@@ -49,7 +49,7 @@ export default defineComponent({
       num: '',
       code: ''
     })
-
+    // # 被父组件通过ref调用
     const submit = () => {
       console.log('login phone submit')
     }
